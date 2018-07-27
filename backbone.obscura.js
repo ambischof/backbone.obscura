@@ -209,14 +209,14 @@
                     if (eventName === 'reset') {
                         target.models = from.models;
                     }
-                    if (_.contains(eventWhiteList, eventName)) {
-                        if (_.contains([
+                    if (_.includes(eventWhiteList, eventName)) {
+                        if (_.includes([
                                 'add',
                                 'remove',
                                 'destroy'
                             ], eventName)) {
                             args[2] = target;
-                        } else if (_.contains([
+                        } else if (_.includes([
                                 'reset',
                                 'sort'
                             ], eventName)) {
@@ -224,14 +224,14 @@
                         }
                         target.trigger.apply(this, args);
                     } else if (isChangeEvent) {
-                        if (target.contains(args[1])) {
+                        if (target.has(args[1])) {
                             target.trigger.apply(this, args);
                         }
                     }
                 }
                 var methods = {};
                 _.each(_.functions(Backbone.Collection.prototype), function (method) {
-                    if (!_.contains(blacklistedMethods, method)) {
+                    if (!_.includes(blacklistedMethods, method)) {
                         methods[method] = function () {
                             return from[method].apply(from, arguments);
                         };
@@ -305,7 +305,7 @@
                         var index = this.superset().indexOf(model);
                         var filteredIndex = null;
                         for (var i = index - 1; i >= 0; i -= 1) {
-                            if (this.contains(this.superset().at(i))) {
+                            if (this.has(this.superset().at(i))) {
                                 filteredIndex = this.indexOf(this.superset().at(i)) + 1;
                                 break;
                             }
@@ -334,7 +334,7 @@
                 }
             }
             function onModelRemove(model) {
-                if (this.contains(model)) {
+                if (this.has(model)) {
                     this._collection.remove(model);
                 }
                 this.length = this._collection.length;
@@ -391,7 +391,7 @@
                         return _.keys(this._filters);
                     },
                     hasFilter: function (name) {
-                        return _.contains(this.getFilters(), name);
+                        return _.includes(this.getFilters(), name);
                     },
                     destroy: function () {
                         this.stopListening();
@@ -622,7 +622,7 @@
                     return this._superset.indexOf(model);
                 } else {
                     if (!this._reverse) {
-                        return _.sortedIndex(this._collection.toArray(), model, lookupIterator(this._comparator));
+                        return _.sortedIndexBy(this._collection.toArray(), model, lookupIterator(this._comparator));
                     } else {
                         return reverseSortedIndex(this._collection.toArray(), model, lookupIterator(this._comparator));
                     }
@@ -633,12 +633,12 @@
                 this._collection.add(model, { at: index });
             }
             function onRemove(model) {
-                if (this.contains(model)) {
+                if (this.has(model)) {
                     this._collection.remove(model);
                 }
             }
             function onChange(model) {
-                if (this.contains(model) && this._collection.indexOf(model) !== modelInsertIndex.call(this, model)) {
+                if (this.has(model) && this._collection.indexOf(model) !== modelInsertIndex.call(this, model)) {
                     this._collection.remove(model);
                     onAdd.call(this, model);
                 }
@@ -725,7 +725,7 @@
                         args.unshift(eventName);
                         this.trigger.apply(this, args);
                     });
-                }, this);
+                }.bind(this));
             }
             module.exports = proxyEvents;
         }
